@@ -1,9 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   getCurrentWeekend,
   getFollowingWeekend,
   getNextSession,
   getCountDown,
+  findCurrentSession,
+  isInSession,
 } from "../src/dataHelpers.js";
 import {
   testScheduleFixture,
@@ -11,6 +13,7 @@ import {
   emptyScheduleFixture,
   weekendWithNoSessionsFixture,
   mixedTimelineFixture,
+  currentSessionTestFixture,
 } from "./fixtures/scheduleFixtures.js";
 
 describe("dataHelpers", () => {
@@ -208,7 +211,7 @@ describe("dataHelpers", () => {
 
       const result = getCountDown(sessionTime, mockNow);
 
-      expect(result).toBe("2d 5h 30m");
+      expect(result).toEqual({ days: 2, hours: 5, minutes: 30 });
     });
 
     it("should handle countdown less than a day", () => {
@@ -217,7 +220,7 @@ describe("dataHelpers", () => {
 
       const result = getCountDown(sessionTime, mockNow);
 
-      expect(result).toBe("0d 5h 30m");
+      expect(result).toEqual({ days: 0, hours: 5, minutes: 30 });
     });
 
     it("should handle countdown less than an hour", () => {
@@ -226,7 +229,7 @@ describe("dataHelpers", () => {
 
       const result = getCountDown(sessionTime, mockNow);
 
-      expect(result).toBe("0d 0h 45m");
+      expect(result).toEqual({ days: 0, hours: 0, minutes: 45 });
     });
 
     it("should handle exact time match", () => {
@@ -235,7 +238,7 @@ describe("dataHelpers", () => {
 
       const result = getCountDown(sessionTime, mockNow);
 
-      expect(result).toBe("0d 0h 0m");
+      expect(result).toEqual({ days: 0, hours: 0, minutes: 0 });
     });
 
     it("should handle large countdown values", () => {
@@ -245,7 +248,162 @@ describe("dataHelpers", () => {
       const result = getCountDown(sessionTime, mockNow);
 
       // Should be 72 days, 15 hours, 30 minutes
-      expect(result).toBe("72d 15h 30m");
+      expect(result).toEqual({ days: 72, hours: 15, minutes: 30 });
+    });
+  });
+
+  describe("findCurrentSession", () => {
+    it("should return the current session when now is during a session", () => {
+      // Now is during Practice 1 (10:00-11:00)
+      const now = new Date("2025-06-01T10:30:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).not.toBeNull();
+      expect(result?.name).toBe("Practice 1");
+      expect(result?.start).toBe("2025-06-01T10:00:00.000Z");
+    });
+
+    it("should return the current session during Practice 2", () => {
+      // Now is during Practice 2 (14:00-15:00)
+      const now = new Date("2025-06-01T14:45:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).not.toBeNull();
+      expect(result?.name).toBe("Practice 2");
+      expect(result?.start).toBe("2025-06-01T14:00:00.000Z");
+    });
+
+    it("should return the current session during Qualifying", () => {
+      // Now is during Qualifying (14:00-15:00)
+      const now = new Date("2025-06-02T14:15:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).not.toBeNull();
+      expect(result?.name).toBe("Qualifying");
+      expect(result?.start).toBe("2025-06-02T14:00:00.000Z");
+    });
+
+    it("should return the Race when during race time (using 2-hour duration)", () => {
+      // Now is during Race (15:00 + 2 hours = 17:00)
+      const now = new Date("2025-06-03T16:00:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).not.toBeNull();
+      expect(result?.name).toBe("Race");
+      expect(result?.start).toBe("2025-06-03T15:00:00.000Z");
+    });
+
+    it("should return null when now is between sessions", () => {
+      // Now is between Practice 1 and Practice 2
+      const now = new Date("2025-06-01T12:00:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).toBeNull();
+    });
+
+    it("should return null when now is before all sessions", () => {
+      const now = new Date("2025-05-31T00:00:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).toBeNull();
+    });
+
+    it("should return null when now is after race ends", () => {
+      // Now is after race ends (15:00 + 2 hours = 17:00)
+      const now = new Date("2025-06-03T18:00:00.000Z");
+
+      const result = findCurrentSession(currentSessionTestFixture, now);
+
+      expect(result).toBeNull();
+    });
+
+    it("should return null for empty schedule", () => {
+      const now = new Date("2025-06-01T10:30:00.000Z");
+
+      const result = findCurrentSession(emptyScheduleFixture, now);
+
+      expect(result).toBeNull();
+    });
+
+    it("should return null for weekend with no sessions", () => {
+      const now = new Date("2025-06-01T10:30:00.000Z");
+
+      const result = findCurrentSession(weekendWithNoSessionsFixture, now);
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("isInSession", () => {
+    it("should return true when currently in a session", () => {
+      // Now is during Practice 1
+      const now = new Date("2025-06-01T10:30:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(true);
+    });
+
+    it("should return true when currently in Practice 2", () => {
+      const now = new Date("2025-06-01T14:45:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(true);
+    });
+
+    it("should return true when currently in Qualifying", () => {
+      const now = new Date("2025-06-02T14:15:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(true);
+    });
+
+    it("should return true when currently in Race", () => {
+      const now = new Date("2025-06-03T16:00:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(true);
+    });
+
+    it("should return false when between sessions", () => {
+      const now = new Date("2025-06-01T12:00:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(false);
+    });
+
+    it("should return false when before all sessions", () => {
+      const now = new Date("2025-05-31T00:00:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(false);
+    });
+
+    it("should return false when after all sessions", () => {
+      const now = new Date("2025-06-03T18:00:00.000Z");
+
+      const result = isInSession(currentSessionTestFixture, now);
+
+      expect(result).toBe(false);
+    });
+
+    it("should return false for empty schedule", () => {
+      const now = new Date("2025-06-01T10:30:00.000Z");
+
+      const result = isInSession(emptyScheduleFixture, now);
+
+      expect(result).toBe(false);
     });
   });
 });

@@ -227,6 +227,35 @@ export const weekendWithNoSessionsFixture: Schedule = [
   },
 ];
 
+// Current session testing fixture - sessions designed for testing current session logic
+export const currentSessionTestFixture: Schedule = [
+  {
+    location: "bahrain",
+    sessions: [
+      {
+        name: "Practice 1",
+        start: "2025-06-01T10:00:00.000Z",
+        end: "2025-06-01T11:00:00.000Z",
+      },
+      {
+        name: "Practice 2",
+        start: "2025-06-01T14:00:00.000Z",
+        end: "2025-06-01T15:00:00.000Z",
+      },
+      {
+        name: "Qualifying",
+        start: "2025-06-02T14:00:00.000Z",
+        end: "2025-06-02T15:00:00.000Z",
+      },
+      {
+        name: "Race",
+        start: "2025-06-03T15:00:00.000Z",
+        end: "", // Race end time is calculated (2 hours from start)
+      },
+    ],
+  },
+];
+
 // Mixed timeline fixture - past, present, and future weekends
 export const mixedTimelineFixture: Schedule = [
   ...pastWeekendFixture,

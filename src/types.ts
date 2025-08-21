@@ -30,3 +30,9 @@ export interface Weekend {
 }
 
 export type Schedule = Weekend[];
+
+export interface CountDownData {
+  days: number;
+  hours: number;
+  minutes: number;
+}

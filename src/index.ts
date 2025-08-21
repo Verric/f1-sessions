@@ -8,6 +8,7 @@ import {
   getFollowingWeekend,
   getNextSession,
 } from "./dataHelpers.js";
+import type { CountDownData } from "./types.js";
 
 async function main() {
   const now = new Date();
@@ -25,7 +26,7 @@ async function main() {
     "/",
     pc.greenBright(session.name),
     "/",
-    pc.greenBright(countdown),
+    pc.greenBright(formatCountDown(countdown)),
   );
   console.log(
     pc.gray("Session Name".padEnd(20)) +
@@ -50,6 +51,10 @@ async function main() {
 
     console.log(sessionName + localTime + trackTime);
   });
+}
+
+function formatCountDown(data: CountDownData) {
+  return `${data.days}d ${data.hours}h ${data.minutes}m`;
 }
 
 main().catch(console.error);

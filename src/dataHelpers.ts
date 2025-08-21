@@ -1,5 +1,4 @@
-import { differenceInSeconds } from "date-fns";
-import type { F1Session, Schedule, Weekend } from "./types.js";
+import type { CountDownData, F1Session, Schedule, Weekend } from "./types.js";
 export function getCurrentWeekend(data: Schedule, now: Date): Weekend | null {
   return (
     data.find((weekend) => {
@@ -30,10 +29,41 @@ export function getNextSession(data: Schedule, now: Date): F1Session | null {
   return null;
 }
 
-export function getCountDown(nextSessionTime: string, now: Date) {
-  const deltaSeconds = differenceInSeconds(new Date(nextSessionTime), now);
+export function getCountDown(
+  nextSessionTime: string,
+  now: Date,
+): CountDownData {
+  const deltaSeconds = Math.floor(
+    (new Date(nextSessionTime).getTime() - now.getTime()) / 1000,
+  );
   const days = Math.floor(deltaSeconds / 86400);
   const hours = Math.floor((deltaSeconds % 86400) / 3600);
-  const mins = Math.floor((deltaSeconds % 3600) / 60);
-  return `${days}d ${hours}h ${mins}m`;
+  const minutes = Math.floor((deltaSeconds % 3600) / 60);
+  return { days, hours, minutes };
+}
+
+function sessionBounds(s: F1Session): [number, number] {
+  const TWO_HOURS = 2 * 60 * 60 * 1000;
+  const start = new Date(s.start).getTime();
+  const end =
+    s.name === "Race" ? start + TWO_HOURS : new Date(s.end!).getTime();
+  return [start, end];
+}
+
+export function findCurrentSession(
+  data: Schedule,
+  now: Date,
+): F1Session | null {
+  const currentTime = now.getTime();
+  for (const weekend of data) {
+    for (const session of weekend.sessions) {
+      const [start, end] = sessionBounds(session);
+      if (currentTime >= start && currentTime < end) return session;
+    }
+  }
+  return null;
+}
+
+export function isInSession(data: Schedule, now: Date): boolean {
+  return !!findCurrentSession(data, now);
 }
