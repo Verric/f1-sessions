@@ -23,15 +23,14 @@ export function getFollowingWeekend(data: Schedule, now: Date): Weekend | null {
  */
 export function getNextSession(data: Schedule, now: Date): F1Session | null {
   for (const weekend of data) {
-    for (const s of weekend.sessions) {
-      if (new Date(s.start) > now) return s;
+    for (const session of weekend.sessions) {
+      if (new Date(session.start) > now) return session;
     }
   }
   return null;
 }
 
-export function getCountDown(nextSessionTime: string) {
-  const now = new Date();
+export function getCountDown(nextSessionTime: string, now: Date) {
   const deltaSeconds = differenceInSeconds(new Date(nextSessionTime), now);
   const days = Math.floor(deltaSeconds / 86400);
   const hours = Math.floor((deltaSeconds % 86400) / 3600);

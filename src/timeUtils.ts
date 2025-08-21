@@ -8,7 +8,7 @@ export function timeToUTCstring(
   if (!day || !month || !hours || !minutes) return "";
 
   const date = new Date();
-  date.setUTCMonth(MONTH_MAP[month]!, Number(day));
+  date.setUTCMonth(MONTH_MAP[month], Number(day));
   date.setUTCHours(Number(hours), Number(minutes), 0, 0);
   return date.toISOString();
 }

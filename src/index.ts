@@ -18,7 +18,7 @@ async function main() {
     getCurrentWeekend(data, now) || getFollowingWeekend(data, now);
   if (!weekend) return null;
   if (!session) return "";
-  const countdown = getCountDown(session.start);
+  const countdown = getCountDown(session.start, now);
   console.log(`🏎️ ${pc.red("F1 Sessions")}`);
   console.log(
     pc.greenBright(pc.bold(`${TRACK_NAMES[weekend.location]}`)),
