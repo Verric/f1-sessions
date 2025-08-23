@@ -103,3 +103,5 @@ export const MONTH_MAP = {
 } as const;
 
 export const HOST_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+export const TIME_FORMAT = "MMM d h:mm a" as const;

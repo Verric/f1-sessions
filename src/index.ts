@@ -1,33 +1,44 @@
 import { formatInTimeZone } from "date-fns-tz";
+import mri from "mri";
 import pc from "picocolors";
-import { HOST_TZ, TIME_ZONES, TRACK_NAMES } from "./constants.js";
-import { readOrThrow } from "./dataFilefs.js";
+import { HOST_TZ, TIME_ZONES, TRACK_NAMES, TIME_FORMAT } from "./constants.js";
+import { getDataFromFile } from "./dataFilefs.js";
 import {
   getCountDown,
   getCurrentWeekend,
   getFollowingWeekend,
   getNextSession,
 } from "./dataHelpers.js";
-import type { CountDownData } from "./types.js";
+import type { CountDownData, Weekend } from "./types.js";
 
 async function main() {
+  const args = mri(process.argv.slice(2), { alias: { s: "session" } }); // this may need to change if packaged as single exe
+  console.log(args);
   const now = new Date();
-  const fileData = await readOrThrow();
-  const data = JSON.parse(fileData);
+  const data = await getDataFromFile();
   const session = getNextSession(data, now);
   const weekend =
     getCurrentWeekend(data, now) || getFollowingWeekend(data, now);
-  if (!weekend) return null;
-  if (!session) return "";
+
+  if (!weekend || !session) {
+    console.log("No Further Events");
+    return;
+  }
+
   const countdown = getCountDown(session.start, now);
+  const trackName = pc.greenBright(pc.bold(`${TRACK_NAMES[weekend.location]}`));
+  const sessionName = pc.greenBright(session.name);
+  const countdownString = pc.greenBright(formatCountDown(countdown));
+
   console.log(`🏎️ ${pc.red("F1 Sessions")}`);
-  console.log(
-    pc.greenBright(pc.bold(`${TRACK_NAMES[weekend.location]}`)),
-    "/",
-    pc.greenBright(session.name),
-    "/",
-    pc.greenBright(formatCountDown(countdown)),
-  );
+  console.log(`${trackName} / ${sessionName} / ${countdownString}`);
+
+  if (args.s) {
+    printWeekend(weekend);
+  }
+}
+
+function printWeekend(weekend: Weekend) {
   console.log(
     pc.gray("Session Name".padEnd(20)) +
       pc.gray("Local Time".padEnd(20)) +
@@ -39,13 +50,13 @@ async function main() {
 
     const sessionName = colour(`${session.name}:`.padEnd(20));
     const localTime = colour(
-      formatInTimeZone(session.start, HOST_TZ, "MMM d h:mm a").padEnd(20),
+      formatInTimeZone(session.start, HOST_TZ, TIME_FORMAT).padEnd(20),
     );
     const trackTime = colour(
       formatInTimeZone(
         session.start,
         TIME_ZONES[weekend.location],
-        "MMM d h:mm a",
+        TIME_FORMAT,
       ),
     );
 

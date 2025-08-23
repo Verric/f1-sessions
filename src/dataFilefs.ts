@@ -3,11 +3,20 @@ import { readFile, writeFile } from "node:fs/promises";
 import { ZodError } from "zod";
 import { type Schedule, ScheduleSchema } from "./types.js";
 
-const DATA_FILE = "data.json" as const;
+const DATA_FILE = "schedule.json" as const;
 
-export async function readOrThrow(): Promise<string> {
+async function readOrThrow() {
   if (!existsSync(DATA_FILE)) throw new Error("data file missing"); // write gooder message
   return await readFile(DATA_FILE, "utf8");
+}
+
+export async function getDataFromFile(): Promise<Schedule> {
+  const data = await readOrThrow();
+  try {
+    return JSON.parse(data);
+  } catch (_err) {
+    throw new Error(`Error Parsing ${DATA_FILE} please verify file `);
+  }
 }
 
 export async function parseOrThrow(): Promise<Schedule> {
