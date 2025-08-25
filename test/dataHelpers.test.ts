@@ -1,19 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
+  getCountDown,
+  getCurrentSession,
   getCurrentWeekend,
   getFollowingWeekend,
   getNextSession,
-  getCountDown,
-  findCurrentSession,
   isInSession,
 } from "../src/dataHelpers.js";
 import {
-  testScheduleFixture,
-  pastWeekendFixture,
-  emptyScheduleFixture,
-  weekendWithNoSessionsFixture,
-  mixedTimelineFixture,
   currentSessionTestFixture,
+  emptyScheduleFixture,
+  mixedTimelineFixture,
+  pastWeekendFixture,
+  testScheduleFixture,
+  weekendWithNoSessionsFixture,
 } from "./fixtures/scheduleFixtures.js";
 
 describe("dataHelpers", () => {
@@ -252,12 +252,12 @@ describe("dataHelpers", () => {
     });
   });
 
-  describe("findCurrentSession", () => {
+  describe("getCurrentSession", () => {
     it("should return the current session when now is during a session", () => {
       // Now is during Practice 1 (10:00-11:00)
       const now = new Date("2025-06-01T10:30:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).not.toBeNull();
       expect(result?.name).toBe("Practice 1");
@@ -268,7 +268,7 @@ describe("dataHelpers", () => {
       // Now is during Practice 2 (14:00-15:00)
       const now = new Date("2025-06-01T14:45:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).not.toBeNull();
       expect(result?.name).toBe("Practice 2");
@@ -279,7 +279,7 @@ describe("dataHelpers", () => {
       // Now is during Qualifying (14:00-15:00)
       const now = new Date("2025-06-02T14:15:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).not.toBeNull();
       expect(result?.name).toBe("Qualifying");
@@ -290,7 +290,7 @@ describe("dataHelpers", () => {
       // Now is during Race (15:00 + 2 hours = 17:00)
       const now = new Date("2025-06-03T16:00:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).not.toBeNull();
       expect(result?.name).toBe("Race");
@@ -301,7 +301,7 @@ describe("dataHelpers", () => {
       // Now is between Practice 1 and Practice 2
       const now = new Date("2025-06-01T12:00:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).toBeNull();
     });
@@ -309,7 +309,7 @@ describe("dataHelpers", () => {
     it("should return null when now is before all sessions", () => {
       const now = new Date("2025-05-31T00:00:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).toBeNull();
     });
@@ -318,7 +318,7 @@ describe("dataHelpers", () => {
       // Now is after race ends (15:00 + 2 hours = 17:00)
       const now = new Date("2025-06-03T18:00:00.000Z");
 
-      const result = findCurrentSession(currentSessionTestFixture, now);
+      const result = getCurrentSession(currentSessionTestFixture, now);
 
       expect(result).toBeNull();
     });
@@ -326,7 +326,7 @@ describe("dataHelpers", () => {
     it("should return null for empty schedule", () => {
       const now = new Date("2025-06-01T10:30:00.000Z");
 
-      const result = findCurrentSession(emptyScheduleFixture, now);
+      const result = getCurrentSession(emptyScheduleFixture, now);
 
       expect(result).toBeNull();
     });
@@ -334,7 +334,7 @@ describe("dataHelpers", () => {
     it("should return null for weekend with no sessions", () => {
       const now = new Date("2025-06-01T10:30:00.000Z");
 
-      const result = findCurrentSession(weekendWithNoSessionsFixture, now);
+      const result = getCurrentSession(weekendWithNoSessionsFixture, now);
 
       expect(result).toBeNull();
     });

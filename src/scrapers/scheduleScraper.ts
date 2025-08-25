@@ -1,4 +1,4 @@
-import { fromURL } from "cheerio";
+import { load } from "cheerio";
 import { timeToUTCstring } from "../timeUtils.js";
 import type { F1Session } from "../types.js";
 
@@ -8,8 +8,8 @@ import type { F1Session } from "../types.js";
  * classes over traditional class names, so it's more of a find and traverse rather than just target names
  * This scrapes pages such as https://www.formula1.com/en/racing/2025/<event> eg https://www.formula1.com/en/racing/2025/monaco
  */
-export async function scrapeSessions(url: string) {
-  const $ = await fromURL(url);
+export function scrapeSessions(html: string) {
+  const $ = load(html);
   const data: F1Session[] = [];
   $("ul")
     .first()

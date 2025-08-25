@@ -1,7 +1,7 @@
 import { formatInTimeZone } from "date-fns-tz";
 import mri from "mri";
 import pc from "picocolors";
-import { HOST_TZ, TIME_ZONES, TRACK_NAMES, TIME_FORMAT } from "./constants.js";
+import { HOST_TZ, TIME_FORMAT, TIME_ZONES, TRACK_NAMES } from "./constants.js";
 import { getDataFromFile } from "./dataFilefs.js";
 import {
   getCountDown,
@@ -12,7 +12,9 @@ import {
 import type { CountDownData, Weekend } from "./types.js";
 
 async function main() {
-  const args = mri(process.argv.slice(2), { alias: { s: "session" } }); // this may need to change if packaged as single exe
+  const args = mri(process.argv.slice(2), {
+    alias: { h: "help" },
+  }); // this may need to change if packaged as single exe
   console.log(args);
   const now = new Date();
   const data = await getDataFromFile();
@@ -32,6 +34,14 @@ async function main() {
 
   console.log(`🏎️ ${pc.red("F1 Sessions")}`);
   console.log(`${trackName} / ${sessionName} / ${countdownString}`);
+
+  if (args.h) {
+    console.log("Usage: node f1-sessions <options>");
+    console.log(
+      "-s    Displays all sessions for the current or following race weekend",
+    );
+    return;
+  }
 
   if (args.s) {
     printWeekend(weekend);
