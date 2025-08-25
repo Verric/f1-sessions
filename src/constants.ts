@@ -1,6 +1,25 @@
 import type { Location } from "./types.js";
 
 export const BASE_URL = "https://www.formula1.com/en/racing/2025/" as const;
+export const BASE_URL_RACE =
+  "https://www.formula1.com/en/results/2025/races/" as const;
+
+export const raceURIs = [
+  "1254/australia/race-result",
+  "1255/china/race-result",
+  "1256/japan/race-result",
+  "1257/bahrain/race-result",
+  "1258/saudi-arabia/race-result",
+  "1259/miami/race-result",
+  "1260/emilia-romagna/race-result",
+  "1261/monaco/race-result",
+  "1262/spain/race-result",
+  "1263/canada/race-result",
+  "1264/austria/race-result",
+  "1277/great-britain/race-result", //dunno why it jumps to 1277 for this URI
+  "1265/belgium/race-result",
+  "1266/hungary/race-result",
+] as const;
 
 /**
  * Array ordering must match the order of the events
