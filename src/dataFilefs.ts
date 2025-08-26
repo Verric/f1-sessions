@@ -1,42 +1,47 @@
-import { existsSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
-import { ZodError } from "zod";
-import { type Schedule, ScheduleSchema } from "./types.js";
+import { readFileSync } from "node:fs";
+import { writeFile } from "node:fs/promises";
+import type { RaceResultsType, Schedule } from "./types.js";
 
-const DATA_FILE = "schedule.json" as const;
+const SESSION_DATA_FILE = "schedule.json" as const;
+const RACE_DATA_FILE = "race.json";
 
-async function readOrThrow() {
-  if (!existsSync(DATA_FILE)) throw new Error("data file missing"); // write gooder message
-  return await readFile(DATA_FILE, "utf8");
-}
-
-export async function getDataFromFile(): Promise<Schedule> {
-  const data = await readOrThrow();
+export function readSessionData() {
   try {
-    return JSON.parse(data);
-  } catch (_err) {
-    throw new Error(`Error Parsing ${DATA_FILE} please verify file `);
+    const data = readFileSync(SESSION_DATA_FILE, { encoding: "utf-8", flag: "r" });
+    const sessionData = JSON.parse(data);
+    return sessionData;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.log("Error reading session data file", message);
   }
 }
 
-export async function parseOrThrow(): Promise<Schedule> {
-  const fileData = await readOrThrow();
-  let result: Schedule = [];
+export function readRaceDataOrThrow() {
   try {
-    result = ScheduleSchema.parse(JSON.parse(fileData));
-  } catch (error) {
-    if (error instanceof ZodError) {
-      console.error(
-        "Problems validating file data file: ",
-        JSON.stringify(error.issues, null, 2),
-      );
-    }
+    const data = readFileSync(RACE_DATA_FILE, { encoding: "utf-8", flag: "r" });
+    const raceData: RaceResultsType = JSON.parse(data);
+    return raceData;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    throw new Error(`Error reading race data file: ${message}`);
   }
-  return result;
 }
+
+// export async function parseOrThrow(): Promise<Schedule> {
+//   const fileData = await readOrThrow();
+//   let result: Schedule = [];
+//   try {
+//     result = ScheduleSchema.parse(JSON.parse(fileData));
+//   } catch (error) {
+//     if (error instanceof ZodError) {
+//       console.error("Problems validating file data file: ", JSON.stringify(error.issues, null, 2));
+//     }
+//   }
+//   return result;
+// }
 
 export async function save(data: Schedule) {
-  await writeFile(DATA_FILE, JSON.stringify(data), {
+  await writeFile(SESSION_DATA_FILE, JSON.stringify(data), {
     encoding: "utf8",
     flag: "a",
   });
