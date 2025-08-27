@@ -1,8 +1,9 @@
 import { formatInTimeZone } from "date-fns-tz";
 import pc from "picocolors";
-import { HOST_TZ, TIME_FORMAT, TIME_ZONES, TRACK_NAMES } from "./constants.js";
+import { colourText, HOST_TZ, TEAM_COLOURS, TIME_FORMAT, TIME_ZONES, TRACK_NAMES } from "./constants.js";
 import { getCountDown } from "./dataHelpers.js";
-import type { CountDownData, F1Session, RaceResultsType, Weekend } from "./types.js";
+import type { CountDownData, F1Session, RaceResultsType, TeamStanding, Weekend } from "./types.js";
+import { performance } from "node:perf_hooks";
 
 export function showCountDown(session: F1Session | null, weekend: Weekend | null, now: Date) {
   if (!weekend || !session) {
@@ -38,6 +39,7 @@ export function showWeekend(weekend: Weekend | null) {
 }
 
 export function showRaceResults(raceData: RaceResultsType, index: number) {
+  const start = performance.now();
   const race = raceData[index];
   console.log("Race Results:", pc.greenBright(race!.location));
   console.log(
@@ -52,20 +54,41 @@ export function showRaceResults(raceData: RaceResultsType, index: number) {
     ),
   );
   console.log(pc.gray("-".repeat(80))); // separator line after header
-  race!.results.forEach((result, idx) => {
-    const colour = idx % 2 === 0 ? pc.blue : pc.white;
-    const position = colour(result.position.toString().padEnd(5));
-    const number = colour(result.number.toString().padEnd(5));
-    const driver = colour(result.driver.padEnd(20));
-    const team = colour(result.team.padEnd(20));
-    const laps = colour(result.laps.toString().padEnd(5));
-    const time = colour(result.time.padEnd(20));
-    const points = colour(result.points.toString().padEnd(5));
+  race!.results.forEach((result) => {
+    const position = colourText(TEAM_COLOURS[result.team], result.position.toString().padEnd(5));
+    const number = colourText(TEAM_COLOURS[result.team], result.number.toString().padEnd(5));
+    const driver = colourText(TEAM_COLOURS[result.team], result.driver.padEnd(20));
+    const team = colourText(TEAM_COLOURS[result.team], result.team.padEnd(20));
+    const laps = colourText(TEAM_COLOURS[result.team], result.laps.toString().padEnd(5));
+    const time = colourText(TEAM_COLOURS[result.team], result.time.padEnd(20));
+    const points = colourText(TEAM_COLOURS[result.team], result.points.toString().padEnd(5));
     console.log(position + number + driver + team + laps + time + points);
   });
+  const end = performance.now();
+  console.log(`Race Results: ${(end - start).toFixed(5)}`);
 }
 
 export function showHelp() {
   console.log("Usage: node f1-sessions <options>");
-  console.log("-s    Displays all sessions for the current or following race weekend");
+  console.log("-s  Displays all sessions for the current or following race weekend");
+}
+
+export function showConstrutorLeaderboard(data: TeamStanding[]) {
+  console.log();
+  console.log(pc.greenBright(`Constructor's Championship`));
+  console.log(pc.gray("Constructor".padEnd(20) + "Points".padEnd(20)));
+  console.log(pc.gray("-".repeat(60)));
+  for (const { team, colour, points } of data) {
+    console.log(colourText(colour, team.padEnd(20)) + points.toString().padEnd(20));
+  }
+}
+
+export function showDriversLeaderboard(data: Map<string, { points: number; colour: string }>) {
+  console.log();
+  console.log(pc.greenBright(`Drivers's Championship`));
+  console.log(pc.gray("Driver".padEnd(20) + "Points".padEnd(20)));
+  console.log(pc.gray("-".repeat(60)));
+  for (const [driver, { points, colour }] of data.entries()) {
+    console.log(colourText(colour, driver.padEnd(20)) + points.toString().padEnd(20));
+  }
 }

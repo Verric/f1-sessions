@@ -28,10 +28,8 @@ const DriverResultSchema = z.object({
   points: z.number().nonnegative(), //0-25
 });
 
-const DriversResultSchema = z.array(DriverResultSchema);
-
 export const RaceResultsSchema = z.array(
-  z.object({ location: z.string().nonempty(), results: DriversResultSchema }),
+  z.object({ location: z.string().nonempty(), results: z.array(DriverResultSchema) }),
 );
 
 export type RaceResultsType = z.infer<typeof RaceResultsSchema>;
@@ -53,4 +51,16 @@ export interface CountDownData {
   days: number;
   hours: number;
   minutes: number;
+}
+
+export interface TeamStanding {
+  team: string;
+  points: number;
+  colour: string;
+}
+
+export interface DriverStanding {
+  driver: string;
+  points: number;
+  colour: string;
 }

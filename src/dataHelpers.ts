@@ -29,10 +29,7 @@ export function getNextSession(data: Schedule, now: Date): F1Session | null {
   return null;
 }
 
-export function getCountDown(
-  nextSessionTime: string,
-  now: Date,
-): CountDownData {
+export function getCountDown(nextSessionTime: string, now: Date): CountDownData {
   const sessionTime = new Date(nextSessionTime).getTime();
   const currentTime = now.getTime();
   const deltaSeconds = Math.floor((sessionTime - currentTime) / 1000);

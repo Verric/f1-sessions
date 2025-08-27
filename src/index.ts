@@ -1,8 +1,17 @@
 import mri from "mri";
 import { readRaceDataOrThrow, readSessionData } from "./dataFilefs.js";
 import { getCurrentWeekend, getFollowingWeekend, getNextSession, getCurrentSession } from "./dataHelpers.js";
-import { showCountDown, showHelp, showRaceResults, showWeekend } from "./presenters.js";
+import {
+  showCountDown,
+  showHelp,
+  showConstrutorLeaderboard,
+  showRaceResults,
+  showWeekend,
+  showDriversLeaderboard,
+} from "./presenters.js";
 import { TRACK_NAMES } from "./constants.js";
+import { getConstructorLeaderboard, getDriversLeaderboard } from "./championshipDataHelper.js";
+import { performance } from "node:perf_hooks";
 
 async function main() {
   const args = mri(process.argv.slice(2), { alias: { h: "help" } });
@@ -12,6 +21,7 @@ async function main() {
   }
   const now = new Date();
   const sessionData = await readSessionData();
+  const raceData = readRaceDataOrThrow();
   const session = getCurrentSession(sessionData, now) || getNextSession(sessionData, now);
   const weekend = getCurrentWeekend(sessionData, now) || getFollowingWeekend(sessionData, now);
 
@@ -31,8 +41,21 @@ async function main() {
     showWeekend(weekend);
   }
 
+  if (args.c) {
+    const start = performance.now();
+
+    const results = getConstructorLeaderboard(raceData);
+    showConstrutorLeaderboard(results);
+    const end = performance.now();
+    console.log("time", end - start);
+  }
+
+  if (args.d) {
+    const results = getDriversLeaderboard(raceData);
+    showDriversLeaderboard(results);
+  }
+
   if (args.r) {
-    const raceData = readRaceDataOrThrow();
     const raceIndex = Number(args.r);
     if (raceIndex < 1 || raceIndex > 24) {
       console.log("Please enter a race a number between 1-24");
