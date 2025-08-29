@@ -18,7 +18,7 @@ export function getFollowingWeekend(data: Schedule, now: Date): Weekend | null {
 }
 
 /**
- * This function works on the assumption that data in data.json is stored chronologically.
+ * This function works on the assumption that data in schedule.json is stored chronologically.
  */
 export function getNextSession(data: Schedule, now: Date): F1Session | null {
   for (const weekend of data) {

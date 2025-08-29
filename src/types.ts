@@ -1,39 +1,24 @@
-import * as z from "zod";
-import { locationURIs } from "./constants.js";
+import type { Location, TEAM_NAMES } from "./constants.js";
 
-export type Location = (typeof locationURIs)[number];
+// RACE DATA TYPES
+interface DriverResult {
+  position: number;
+  number: number;
+  driver: string;
+  team: TEAM_NAMES;
+  laps: string;
+  time: string;
+  points: number;
+}
 
-const SessionSchema = z.object({
-  name: z.string().nonempty(), // TODO make this an enum with all session types
-  start: z.iso.datetime(),
-  end: z.union([z.literal(""), z.iso.datetime()]), // the end date for a RACE session is scraped as an ""
-});
+interface RaceResult {
+  location: Location;
+  results: DriverResult[];
+}
 
-const SessionsSchema = z.array(SessionSchema);
+export type RaceResults = RaceResult[];
 
-const WeekendSchema = z.object({
-  location: z.enum(locationURIs),
-  sessions: SessionsSchema,
-});
-
-export const ScheduleSchema = z.array(WeekendSchema);
-
-const DriverResultSchema = z.object({
-  position: z.number().nonnegative(),
-  number: z.number().nonnegative(),
-  driver: z.string().nonempty(), // todo make this a literal
-  team: z.string().nonempty(), // todo make this a literal
-  laps: z.number().nonnegative(),
-  time: z.string().nonempty(),
-  points: z.number().nonnegative(), //0-25
-});
-
-export const RaceResultsSchema = z.array(
-  z.object({ location: z.string().nonempty(), results: z.array(DriverResultSchema) }),
-);
-
-export type RaceResultsType = z.infer<typeof RaceResultsSchema>;
-
+// SESSION AND SCHEDULE TYPES
 export interface F1Session {
   name: string;
   start: string;
@@ -53,6 +38,7 @@ export interface CountDownData {
   minutes: number;
 }
 
+// CHAMPIONSHIP TYPES
 export interface TeamStanding {
   team: string;
   points: number;

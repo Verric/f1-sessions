@@ -1,5 +1,3 @@
-import type { Location } from "./types.js";
-
 export const BASE_URL = "https://www.formula1.com/en/racing/2025/" as const;
 export const BASE_URL_RACE = "https://www.formula1.com/en/results/2025/races/" as const;
 
@@ -51,6 +49,9 @@ export const locationURIs = [
   "united-arab-emirates",
 ] as const;
 
+export type Location = (typeof locationURIs)[number];
+
+//keys are based of session/location URI's hence emiliaromagna not emilia-romagna
 export const TIME_ZONES: Record<Location, string> = {
   australia: "Australia/Melbourne",
   china: "Asia/Shanghai",
@@ -122,7 +123,17 @@ export const MONTH_MAP = {
 
 export const HOST_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export const TIME_FORMAT = "MMM d h:mm a" as const;
+export type TEAM_NAMES =
+  | "Mercedes"
+  | "Red Bull Racing"
+  | "Ferrari"
+  | "McLaren"
+  | "Alpine"
+  | "Racing Bulls"
+  | "Aston Martin"
+  | "Williams"
+  | "Kick Sauber"
+  | "Haas";
 
 //Bit Fragile, but these names must match team names in race.json
 export const TEAM_COLOURS = {

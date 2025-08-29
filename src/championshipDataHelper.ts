@@ -1,7 +1,7 @@
 import { TEAM_COLOURS } from "./constants.js";
-import type { RaceResultsType, TeamStanding } from "./types.js";
+import type { RaceResults, TeamStanding } from "./types.js";
 
-export function getConstructorLeaderboard(data: RaceResultsType): TeamStanding[] {
+export function getConstructorLeaderboard(data: RaceResults): TeamStanding[] {
   const leaderBoard: Record<string, { points: number; colour: string }> = {};
   const raceResults = data.flatMap((res) => res.results);
   for (const { points, team } of raceResults) {
@@ -21,7 +21,7 @@ export function getConstructorLeaderboard(data: RaceResultsType): TeamStanding[]
 }
 
 //re-look into this, quick hack and chop
-export function getDriversLeaderboard(data: RaceResultsType) {
+export function getDriversLeaderboard(data: RaceResults) {
   const leaderBoard = new Map<string, { points: number; colour: string }>();
   const raceResults = data.flatMap((res) => res.results);
   for (const { driver, points, team } of raceResults) {

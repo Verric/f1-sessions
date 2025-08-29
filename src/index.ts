@@ -2,7 +2,7 @@ import { performance } from "node:perf_hooks";
 import mri from "mri";
 import { getConstructorLeaderboard, getDriversLeaderboard } from "./championshipDataHelper.js";
 import { TRACK_NAMES } from "./constants.js";
-import { readRaceDataOrThrow, readSessionData } from "./dataFilefs.js";
+import { readRaceDataOrThrow, readSessionDataOrThrow } from "./dataFilefs.js";
 import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./dataHelpers.js";
 import {
   showConstrutorLeaderboard,
@@ -13,7 +13,7 @@ import {
   showWeekend,
 } from "./presenters.js";
 
-async function main() {
+function main() {
   const args = mri(process.argv.slice(2), { alias: { h: "help" } });
   console.log(args);
   if (args.h) {
@@ -21,7 +21,7 @@ async function main() {
     return;
   }
   const now = new Date();
-  const sessionData = await readSessionData();
+  const sessionData = readSessionDataOrThrow();
   const raceData = readRaceDataOrThrow();
   const session = getCurrentSession(sessionData, now) || getNextSession(sessionData, now);
   const weekend = getCurrentWeekend(sessionData, now) || getFollowingWeekend(sessionData, now);
@@ -33,8 +33,9 @@ async function main() {
       (total, trackName, index) => `${total} ${index + 1}: ${trackName} \n`,
       "",
     );
-    console.log("Tracks Listing");
-    console.log(tracks);
+
+    process.stdout.write(`Track Listings\n${tracks}`);
+
     return;
   }
 
@@ -45,8 +46,8 @@ async function main() {
   if (args.c) {
     const start = performance.now();
     const race = typeof args.c === "number" ? args.c : raceData.length;
-    if (args.c < 1 || args.c > 24) {
-      console.log("Please enter a race a number between 1-24");
+    if (args.c < 1 || args.c > raceData.length) {
+      console.log(`Please enter a race a number between 1-${raceData.length}`);
       return;
     }
     const results = getConstructorLeaderboard(raceData.slice(0, race));
@@ -57,18 +58,26 @@ async function main() {
 
   if (args.d) {
     const race = typeof args.d === "number" ? args.d : raceData.length;
+    if (args.d < 1 || args.d > raceData.length) {
+      console.log(`Please enter a race a number between 1-${raceData.length}`);
+      return;
+    }
     const results = getDriversLeaderboard(raceData.slice(0, race));
     showDriversLeaderboard(results);
   }
 
   if (args.r) {
     const raceIndex = Number(args.r);
-    if (raceIndex < 1 || raceIndex > 24) {
-      console.log("Please enter a race a number between 1-24");
+    if (raceIndex < 1 || raceIndex > raceData.length) {
+      console.log(`Please enter a race a number between 1-${raceData.length}`);
       return;
     }
     showRaceResults(raceData, raceIndex - 1);
   }
 }
 
-main().catch(console.error);
+try {
+  main();
+} catch (error) {
+  console.error(error);
+}

@@ -3,7 +3,7 @@ import pc from "picocolors";
 import { colourText, HOST_TZ, TEAM_COLOURS, TIME_ZONES, TRACK_NAMES } from "./constants.js";
 import { getCountDown } from "./dataHelpers.js";
 import { formatTimeTz } from "./timeHelpers.js";
-import type { CountDownData, F1Session, RaceResultsType, TeamStanding, Weekend } from "./types.js";
+import type { CountDownData, F1Session, RaceResults, TeamStanding, Weekend } from "./types.js";
 
 export function showCountDown(session: F1Session | null, weekend: Weekend | null, now: Date) {
   if (!weekend || !session) {
@@ -40,7 +40,7 @@ export function showWeekend(weekend: Weekend | null) {
   });
 }
 
-export function showRaceResults(raceData: RaceResultsType, index: number) {
+export function showRaceResults(raceData: RaceResults, index: number) {
   const start = performance.now();
   const race = raceData[index];
   console.log("Race Results:", pc.greenBright(race!.location));
@@ -89,7 +89,7 @@ export function showDriversLeaderboard(data: Map<string, { points: number; colou
   console.log();
   console.log(pc.greenBright(`Drivers's Championship`));
   console.log(pc.gray("Driver".padEnd(20) + "Points".padEnd(20)));
-  console.log(pc.gray("-".repeat(60)));
+  console.log(pc.gray("-".repeat(40)));
   for (const [driver, { points, colour }] of data.entries()) {
     console.log(colourText(colour, driver.padEnd(20)) + points.toString().padEnd(20));
   }

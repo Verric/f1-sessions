@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import type { MONTH_MAP } from "../constants.js";
 import { timeToUTCstring } from "../timeUtils.js";
 import type { F1Session } from "../types.js";
 
@@ -19,7 +20,7 @@ export function scrapeSessions(html: string) {
 
       const dateCol = $li.children("span").first();
       const day = dateCol.find("span").eq(0).text().trim();
-      const month = dateCol.find("span").eq(1).text().trim();
+      const month = dateCol.find("span").eq(1).text().trim() as keyof typeof MONTH_MAP;
 
       const times = $li
         .find("time")

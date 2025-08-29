@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { RaceResultsType, Schedule } from "./types.js";
+import type { RaceResults, Schedule } from "./types.js";
 
 const SESSION_DATA_FILE = "schedule.json";
 const RACE_DATA_FILE = "race.json";
@@ -16,7 +16,7 @@ export function readSessionDataOrThrow() {
 
 export function readRaceDataOrThrow() {
   const data = readFileSync(RACE_DATA, { encoding: "utf-8" });
-  return JSON.parse(data) as RaceResultsType;
+  return JSON.parse(data) as RaceResults;
 }
 
 export function save(data: Schedule) {
