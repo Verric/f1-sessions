@@ -2,7 +2,7 @@
  *
  * @param date Date object
  * @param tz String IANA tz string
- * @returns string of the formatted type
+ * @returns string of the formatted tz
  *
  * Current string format is "MMM d h:mm a" -> Aug 29 8:30 PM
  */

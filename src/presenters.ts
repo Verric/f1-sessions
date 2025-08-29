@@ -7,7 +7,7 @@ import type { CountDownData, F1Session, RaceResults, TeamStanding, Weekend } fro
 
 export function showCountDown(session: F1Session | null, weekend: Weekend | null, now: Date) {
   if (!weekend || !session) {
-    console.log(pc.red("No Further Events"));
+    process.stdout.write(pc.red("No Further Events"));
     return;
   }
   const formatCountDown = (data: CountDownData) => `${data.days}d ${data.hours}h ${data.minutes}m`;
@@ -16,36 +16,35 @@ export function showCountDown(session: F1Session | null, weekend: Weekend | null
   const sessionName = pc.greenBright(session.name);
   const countdownString = pc.greenBright(formatCountDown(countdown));
 
-  console.log(`🏎️ ${pc.red("F1 Sessions 2025")}`);
-  console.log(`${trackName} / ${sessionName} / ${countdownString}`);
+  process.stdout.write(`🏎️ ${pc.red("F1 Sessions 2025")}\n`);
+  process.stdout.write(`${trackName} / ${sessionName} / ${countdownString}\n`);
 }
 
 export function showWeekend(weekend: Weekend | null) {
   if (!weekend) {
-    console.log(pc.red("No weekend data available"));
+    process.stdout.write(pc.red("No weekend data available\n"));
     return;
   }
-  console.log(pc.gray("Session Name".padEnd(20)) + pc.gray("Local Time".padEnd(20)) + pc.gray("Track Time"));
-  console.log(pc.gray("-".repeat(80)));
-  weekend.sessions.forEach((session, idx) => {
+  process.stdout.write(
+    pc.gray(`${"Session Name".padEnd(20)} ${pc.gray("Local Time".padEnd(20))} ${pc.gray("Track Time")}\n`),
+  );
+  process.stdout.write(`${pc.gray("-".repeat(80))}\n`);
+  const sessionString = weekend.sessions.reduce((total, session, idx) => {
     const colour = idx % 2 === 0 ? pc.blue : pc.white;
-
     const sessionName = colour(`${session.name}:`.padEnd(20));
-    //const localTime = colour(formatInTimeZone(session.start, HOST_TZ, TIME_FORMAT).padEnd(20));
-    //const trackTime = colour(formatInTimeZone(session.start, TIME_ZONES[weekend.location], TIME_FORMAT));
     const localTime = colour(formatTimeTz(session.start, HOST_TZ).padEnd(20));
     const trackTime = colour(formatTimeTz(session.start, TIME_ZONES[weekend.location]));
-
-    console.log(sessionName + localTime + trackTime);
-  });
+    return `${total} ${sessionName} ${localTime} ${trackTime}\n`;
+  }, "");
+  process.stdout.write(sessionString);
 }
 
 export function showRaceResults(raceData: RaceResults, index: number) {
   const start = performance.now();
   const race = raceData[index];
-  console.log("Race Results:", pc.greenBright(race!.location));
-  console.log(
-    pc.gray(
+  process.stdout.write(`Race Results: ${pc.greenBright(race!.location)}\n`);
+  process.stdout.write(
+    `${pc.gray(
       "Pos".padEnd(5) +
         "No.".padEnd(5) +
         "Driver".padEnd(20) +
@@ -53,9 +52,9 @@ export function showRaceResults(raceData: RaceResults, index: number) {
         "Laps".padEnd(5) +
         "Time".padEnd(20) +
         "Points".padEnd(5),
-    ),
+    )}\n`,
   );
-  console.log(pc.gray("-".repeat(80)));
+  process.stdout.write(`${pc.gray("-".repeat(80))}\n`);
   race!.results.forEach((result) => {
     const position = colourText(TEAM_COLOURS[result.team], result.position.toString().padEnd(5));
     const number = colourText(TEAM_COLOURS[result.team], result.number.toString().padEnd(5));
@@ -64,7 +63,7 @@ export function showRaceResults(raceData: RaceResults, index: number) {
     const laps = colourText(TEAM_COLOURS[result.team], result.laps.toString().padEnd(5));
     const time = colourText(TEAM_COLOURS[result.team], result.time.padEnd(20));
     const points = colourText(TEAM_COLOURS[result.team], result.points.toString().padEnd(5));
-    console.log(position + number + driver + team + laps + time + points);
+    process.stdout.write(`${position}${number}${driver}${team}${laps}${time}${points}\n`);
   });
   const end = performance.now();
   console.log(`Race Results: ${(end - start).toFixed(5)}`);
