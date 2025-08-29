@@ -5,6 +5,17 @@ import { getCountDown } from "./dataHelpers.js";
 import { formatTimeTz } from "./timeHelpers.js";
 import type { CountDownData, F1Session, RaceResults, TeamStanding, Weekend } from "./types.js";
 
+export function showBanner() {
+  process.stdout.write(`🏎️ ${pc.red("F1 Sessions 2025")}\n`);
+}
+
+export function showCurrentSession(session: F1Session | null) {
+  if (!session) {
+    return; // do not display anything if not in session
+  }
+  process.stdout.write(pc.blueBright(`LIVE Session: ${session.name}\n`));
+}
+
 export function showCountDown(session: F1Session | null, weekend: Weekend | null, now: Date) {
   if (!weekend || !session) {
     process.stdout.write(pc.red("No Further Events"));
@@ -16,7 +27,6 @@ export function showCountDown(session: F1Session | null, weekend: Weekend | null
   const sessionName = pc.greenBright(session.name);
   const countdownString = pc.greenBright(formatCountDown(countdown));
 
-  process.stdout.write(`🏎️ ${pc.red("F1 Sessions 2025")}\n`);
   process.stdout.write(`${trackName} / ${sessionName} / ${countdownString}\n`);
 }
 

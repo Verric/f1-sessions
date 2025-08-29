@@ -106,7 +106,3 @@ function getCurrentSessionBinary(data: Schedule, now: Date): F1Session | null {
   }
   return null;
 }
-
-export function isInSession(data: Schedule, now: Date): boolean {
-  return !!getCurrentSession(data, now);
-}

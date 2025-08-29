@@ -4,8 +4,10 @@ import { TRACK_NAMES } from "./constants.js";
 import { readRaceDataOrThrow, readSessionDataOrThrow } from "./dataFilefs.js";
 import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./dataHelpers.js";
 import {
+  showBanner,
   showConstrutorLeaderboard,
   showCountDown,
+  showCurrentSession,
   showDriversLeaderboard,
   showHelp,
   showRaceResults,
@@ -22,8 +24,12 @@ function main() {
   const now = new Date();
   const sessionData = readSessionDataOrThrow();
   const raceData = readRaceDataOrThrow();
-  const session = getCurrentSession(sessionData, now) || getNextSession(sessionData, now);
+  const session = getNextSession(sessionData, now);
   const weekend = getCurrentWeekend(sessionData, now) || getFollowingWeekend(sessionData, now);
+  const currentSession = getCurrentSession(sessionData, now);
+
+  showBanner();
+  showCurrentSession(currentSession);
   showCountDown(session, weekend, now);
 
   if (args.q) {
