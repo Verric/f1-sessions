@@ -4,9 +4,9 @@ import type { RaceResultsType, TeamStanding } from "./types.js";
 export function getConstructorLeaderboard(data: RaceResultsType): TeamStanding[] {
   const leaderBoard: Record<string, { points: number; colour: string }> = {};
   const raceResults = data.flatMap((res) => res.results);
-  for (const { driver, points, team } of raceResults) {
-    leaderBoard[driver] = {
-      points: (leaderBoard[driver]?.points ?? 0) + Number(points),
+  for (const { points, team } of raceResults) {
+    leaderBoard[team] = {
+      points: (leaderBoard[team]?.points ?? 0) + Number(points),
       colour: TEAM_COLOURS[team as keyof typeof TEAM_COLOURS],
     };
   }

@@ -257,8 +257,4 @@ export const currentSessionTestFixture: Schedule = [
 ];
 
 // Mixed timeline fixture - past, present, and future weekends
-export const mixedTimelineFixture: Schedule = [
-  ...pastWeekendFixture,
-  ...testScheduleFixture,
-  ...futureWeekendFixture,
-];
+export const mixedTimelineFixture: Schedule = [...pastWeekendFixture, ...testScheduleFixture, ...futureWeekendFixture];

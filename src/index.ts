@@ -1,20 +1,21 @@
+import { performance } from "node:perf_hooks";
 import mri from "mri";
+import { getConstructorLeaderboard, getDriversLeaderboard } from "./championshipDataHelper.js";
+import { TRACK_NAMES } from "./constants.js";
 import { readRaceDataOrThrow, readSessionData } from "./dataFilefs.js";
-import { getCurrentWeekend, getFollowingWeekend, getNextSession, getCurrentSession } from "./dataHelpers.js";
+import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./dataHelpers.js";
 import {
-  showCountDown,
-  showHelp,
   showConstrutorLeaderboard,
+  showCountDown,
+  showDriversLeaderboard,
+  showHelp,
   showRaceResults,
   showWeekend,
-  showDriversLeaderboard,
 } from "./presenters.js";
-import { TRACK_NAMES } from "./constants.js";
-import { getConstructorLeaderboard, getDriversLeaderboard } from "./championshipDataHelper.js";
-import { performance } from "node:perf_hooks";
 
 async function main() {
   const args = mri(process.argv.slice(2), { alias: { h: "help" } });
+  console.log(args);
   if (args.h) {
     showHelp();
     return;
@@ -43,15 +44,20 @@ async function main() {
 
   if (args.c) {
     const start = performance.now();
-
-    const results = getConstructorLeaderboard(raceData);
+    const race = typeof args.c === "number" ? args.c : raceData.length;
+    if (args.c < 1 || args.c > 24) {
+      console.log("Please enter a race a number between 1-24");
+      return;
+    }
+    const results = getConstructorLeaderboard(raceData.slice(0, race));
     showConstrutorLeaderboard(results);
     const end = performance.now();
     console.log("time", end - start);
   }
 
   if (args.d) {
-    const results = getDriversLeaderboard(raceData);
+    const race = typeof args.d === "number" ? args.d : raceData.length;
+    const results = getDriversLeaderboard(raceData.slice(0, race));
     showDriversLeaderboard(results);
   }
 

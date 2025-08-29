@@ -1,9 +1,9 @@
-import { formatInTimeZone } from "date-fns-tz";
-import pc from "picocolors";
-import { colourText, HOST_TZ, TEAM_COLOURS, TIME_FORMAT, TIME_ZONES, TRACK_NAMES } from "./constants.js";
-import { getCountDown } from "./dataHelpers.js";
-import type { CountDownData, F1Session, RaceResultsType, TeamStanding, Weekend } from "./types.js";
 import { performance } from "node:perf_hooks";
+import pc from "picocolors";
+import { colourText, HOST_TZ, TEAM_COLOURS, TIME_ZONES, TRACK_NAMES } from "./constants.js";
+import { getCountDown } from "./dataHelpers.js";
+import { formatTimeTz } from "./timeHelpers.js";
+import type { CountDownData, F1Session, RaceResultsType, TeamStanding, Weekend } from "./types.js";
 
 export function showCountDown(session: F1Session | null, weekend: Weekend | null, now: Date) {
   if (!weekend || !session) {
@@ -31,8 +31,10 @@ export function showWeekend(weekend: Weekend | null) {
     const colour = idx % 2 === 0 ? pc.blue : pc.white;
 
     const sessionName = colour(`${session.name}:`.padEnd(20));
-    const localTime = colour(formatInTimeZone(session.start, HOST_TZ, TIME_FORMAT).padEnd(20));
-    const trackTime = colour(formatInTimeZone(session.start, TIME_ZONES[weekend.location], TIME_FORMAT));
+    //const localTime = colour(formatInTimeZone(session.start, HOST_TZ, TIME_FORMAT).padEnd(20));
+    //const trackTime = colour(formatInTimeZone(session.start, TIME_ZONES[weekend.location], TIME_FORMAT));
+    const localTime = colour(formatTimeTz(session.start, HOST_TZ).padEnd(20));
+    const trackTime = colour(formatTimeTz(session.start, TIME_ZONES[weekend.location]));
 
     console.log(sessionName + localTime + trackTime);
   });
@@ -53,7 +55,7 @@ export function showRaceResults(raceData: RaceResultsType, index: number) {
         "Points".padEnd(5),
     ),
   );
-  console.log(pc.gray("-".repeat(80))); // separator line after header
+  console.log(pc.gray("-".repeat(80)));
   race!.results.forEach((result) => {
     const position = colourText(TEAM_COLOURS[result.team], result.position.toString().padEnd(5));
     const number = colourText(TEAM_COLOURS[result.team], result.number.toString().padEnd(5));

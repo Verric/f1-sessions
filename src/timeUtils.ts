@@ -1,10 +1,5 @@
 import { MONTH_MAP } from "./constants.js";
-export function timeToUTCstring(
-  month: keyof typeof MONTH_MAP,
-  day: string,
-  hours: string,
-  minutes: string,
-): string {
+export function timeToUTCstring(month: keyof typeof MONTH_MAP, day: string, hours: string, minutes: string): string {
   if (!day || !month || !hours || !minutes) return "";
 
   const date = new Date();

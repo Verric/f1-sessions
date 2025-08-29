@@ -35,12 +35,7 @@ export function scrapeSessions(html: string) {
       const timeWrapper = $li.find("time").first().parent().parent();
       const name = timeWrapper.prev("span").text().trim();
 
-      const isoStart = timeToUTCstring(
-        month!,
-        day!,
-        startHours!,
-        startMinutes!,
-      );
+      const isoStart = timeToUTCstring(month!, day!, startHours!, startMinutes!);
       const isoEnd = timeToUTCstring(month!, day!, endHours!, endMinutes!);
       data.push({
         name,
