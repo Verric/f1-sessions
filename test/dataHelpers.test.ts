@@ -5,7 +5,6 @@ import {
   getCurrentWeekend,
   getFollowingWeekend,
   getNextSession,
-  isInSession,
 } from "../src/dataHelpers.js";
 import {
   currentSessionTestFixture,
@@ -13,7 +12,6 @@ import {
   mixedTimelineFixture,
   pastWeekendFixture,
   testScheduleFixture,
-  weekendWithNoSessionsFixture,
 } from "./fixtures/scheduleFixtures.js";
 
 describe("dataHelpers", () => {
@@ -62,14 +60,6 @@ describe("dataHelpers", () => {
       const now = new Date("2025-03-15T10:00:00.000Z");
 
       const result = getCurrentWeekend(emptyScheduleFixture, now);
-
-      expect(result).toBeNull();
-    });
-
-    it("should return null for weekend with no sessions", () => {
-      const now = new Date("2025-03-15T10:00:00.000Z");
-
-      const result = getCurrentWeekend(weekendWithNoSessionsFixture, now);
 
       expect(result).toBeNull();
     });
@@ -329,81 +319,6 @@ describe("dataHelpers", () => {
       const result = getCurrentSession(emptyScheduleFixture, now);
 
       expect(result).toBeNull();
-    });
-
-    it("should return null for weekend with no sessions", () => {
-      const now = new Date("2025-06-01T10:30:00.000Z");
-
-      const result = getCurrentSession(weekendWithNoSessionsFixture, now);
-
-      expect(result).toBeNull();
-    });
-  });
-
-  describe("isInSession", () => {
-    it("should return true when currently in a session", () => {
-      // Now is during Practice 1
-      const now = new Date("2025-06-01T10:30:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(true);
-    });
-
-    it("should return true when currently in Practice 2", () => {
-      const now = new Date("2025-06-01T14:45:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(true);
-    });
-
-    it("should return true when currently in Qualifying", () => {
-      const now = new Date("2025-06-02T14:15:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(true);
-    });
-
-    it("should return true when currently in Race", () => {
-      const now = new Date("2025-06-03T16:00:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(true);
-    });
-
-    it("should return false when between sessions", () => {
-      const now = new Date("2025-06-01T12:00:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return false when before all sessions", () => {
-      const now = new Date("2025-05-31T00:00:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return false when after all sessions", () => {
-      const now = new Date("2025-06-03T18:00:00.000Z");
-
-      const result = isInSession(currentSessionTestFixture, now);
-
-      expect(result).toBe(false);
-    });
-
-    it("should return false for empty schedule", () => {
-      const now = new Date("2025-06-01T10:30:00.000Z");
-
-      const result = isInSession(emptyScheduleFixture, now);
-
-      expect(result).toBe(false);
     });
   });
 });

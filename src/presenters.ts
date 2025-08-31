@@ -1,4 +1,3 @@
-import { performance } from "node:perf_hooks";
 import pc from "picocolors";
 import { colourText, HOST_TZ, TEAM_COLOURS, TIME_ZONES, TRACK_NAMES } from "./constants.js";
 import { getCountDown } from "./dataHelpers.js";
@@ -50,7 +49,6 @@ export function showWeekend(weekend: Weekend | null) {
 }
 
 export function showRaceResults(raceData: RaceResults, index: number) {
-  const start = performance.now();
   const race = raceData[index];
   process.stdout.write(`Race Results: ${pc.greenBright(race!.location)}\n`);
   process.stdout.write(
@@ -75,8 +73,6 @@ export function showRaceResults(raceData: RaceResults, index: number) {
     const points = colourText(TEAM_COLOURS[result.team], result.points.toString().padEnd(5));
     process.stdout.write(`${position}${number}${driver}${team}${laps}${time}${points}\n`);
   });
-  const end = performance.now();
-  console.log(`Race Results: ${(end - start).toFixed(5)}`);
 }
 
 export function showHelp() {
@@ -85,10 +81,10 @@ export function showHelp() {
 }
 
 export function showConstrutorLeaderboard(data: TeamStanding[]) {
-  console.log();
-  console.log(pc.greenBright(`Constructor's Championship`));
-  console.log(pc.gray("Constructor".padEnd(20) + "Points".padEnd(20)));
-  console.log(pc.gray("-".repeat(60)));
+  process.stdout.write("\n");
+  process.stdout.write(`${pc.greenBright("Constructor's Championship")}\n`);
+  process.stdout.write(`${pc.gray("Constructor".padEnd(20) + "Points".padEnd(20))}\n`);
+  process.stdout.write(`${pc.gray("-".repeat(60))}\n`);
   for (const { team, colour, points } of data) {
     console.log(colourText(colour, team.padEnd(20)) + points.toString().padEnd(20));
   }

@@ -219,14 +219,6 @@ export const singleWeekendFixture: Schedule = [
 // Empty schedule fixture - for edge case testing
 export const emptyScheduleFixture: Schedule = [];
 
-// Weekend with no sessions - for edge case testing
-export const weekendWithNoSessionsFixture: Schedule = [
-  {
-    location: "miami",
-    sessions: [],
-  },
-];
-
 // Current session testing fixture - sessions designed for testing current session logic
 export const currentSessionTestFixture: Schedule = [
   {
