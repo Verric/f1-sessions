@@ -1,4 +1,5 @@
-import type { Location, TEAM_NAMES } from "./constants.js";
+import type { Location } from "./constants/locations.js";
+import type { TEAM_NAMES } from "./constants/teams.js";
 
 // RACE DATA TYPES
 interface DriverResult {

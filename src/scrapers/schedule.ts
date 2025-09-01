@@ -1,7 +1,7 @@
 import { load } from "cheerio";
-import type { MONTH_MAP } from "../constants.js";
-import { timeToUTCstring } from "../timeUtils.js";
+import type { MONTH_MAP } from "../constants/general.js";
 import type { F1Session } from "../types.js";
+import { timeToUTCstring } from "../utils/time.js";
 
 /**
  * Obviously this is the most fragile part of this endeavour. This is very specific to the F1 page layout.

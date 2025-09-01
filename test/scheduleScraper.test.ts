@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { scrapeSessions } from "../src/scrapers/scheduleScraper.js";
+import { scrapeSessions } from "../src/scrapers/schedule.js";
 import type { F1Session } from "../src/types.js";
 
 describe("foo", async () => {

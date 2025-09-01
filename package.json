@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json; cp -r data/ dist/data",
-    "t": "tsdown; cp -r data/ dist/data",
     "check": "tsc --noEmit",
     "dev": "tsx ./src/index.ts",
     "dev:downloader": "tsx ./src/downloader.ts",

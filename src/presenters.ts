@@ -1,8 +1,10 @@
 import pc from "picocolors";
-import { colourText, HOST_TZ, TEAM_COLOURS, TIME_ZONES, TRACK_NAMES } from "./constants.js";
-import { getCountDown } from "./dataHelpers.js";
-import { formatTimeTz } from "./timeHelpers.js";
+import { HOST_TZ } from "./constants/general.js";
+import { TIME_ZONES, TRACK_NAMES } from "./constants/locations.js";
+import { colourText, TEAM_COLOURS } from "./constants/teams.js";
+import { getCountDown } from "./dataProcessors.js";
 import type { CountDownData, F1Session, RaceResults, Schedule, TeamStanding, Weekend } from "./types.js";
+import { formatTimeTz } from "./utils/time.js";
 
 export function showBanner() {
   process.stdout.write(`🏎️ ${pc.red("F1 Sessions 2025")}\n`);
@@ -105,6 +107,9 @@ export function showRaceListings(sessionData: Schedule, now: Date) {
   process.stdout.write("Race Listings\n");
   process.stdout.write(`${pc.gray("-".repeat(40))}\n`);
 
+  //past events are in red
+  //current or upcoming event is in green
+  //future events are in magenta
   let findCurrent = false;
 
   sessionData.forEach((weekend, index) => {
