@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc; cp -r data/ dist/data",
+    "build": "tsc -p ./tsconfig.prod.json; cp -r data/ dist/data",
     "t": "tsdown; cp -r data/ dist/data",
     "check": "tsc --noEmit",
     "dev": "tsx ./src/index.ts",
