@@ -1,6 +1,6 @@
 import mri from "mri";
 import { getConstructorLeaderboard, getDriversLeaderboard } from "./championshipDataHelper.js";
-import { TRACK_NAMES } from "./constants.js";
+
 import { readRaceDataOrThrow, readSessionDataOrThrow } from "./dataFilefs.js";
 import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./dataHelpers.js";
 import {
@@ -10,6 +10,7 @@ import {
   showCurrentSession,
   showDriversLeaderboard,
   showHelp,
+  showRaceListings,
   showRaceResults,
   showWeekend,
 } from "./presenters.js";
@@ -33,11 +34,7 @@ function main() {
   showCountDown(session, weekend, now);
 
   if (args.l) {
-    const tracks = Object.values(TRACK_NAMES).reduce(
-      (total, trackName, index) => `${total} ${index + 1}: ${trackName} \n`,
-      "",
-    );
-    process.stdout.write(`Track Listings\n${tracks}`);
+    showRaceListings(sessionData, now);
     return;
   }
 

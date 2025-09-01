@@ -2,7 +2,7 @@ import pc from "picocolors";
 import { colourText, HOST_TZ, TEAM_COLOURS, TIME_ZONES, TRACK_NAMES } from "./constants.js";
 import { getCountDown } from "./dataHelpers.js";
 import { formatTimeTz } from "./timeHelpers.js";
-import type { CountDownData, F1Session, RaceResults, TeamStanding, Weekend } from "./types.js";
+import type { CountDownData, F1Session, RaceResults, Schedule, TeamStanding, Weekend } from "./types.js";
 
 export function showBanner() {
   process.stdout.write(`🏎️ ${pc.red("F1 Sessions 2025")}\n`);
@@ -98,4 +98,23 @@ export function showDriversLeaderboard(data: Map<string, { points: number; colou
   for (const [driver, { points, colour }] of data.entries()) {
     console.log(colourText(colour, driver.padEnd(20)) + points.toString().padEnd(20));
   }
+}
+
+export function showRaceListings(sessionData: Schedule, now: Date) {
+  process.stdout.write("\n");
+  process.stdout.write("Race Listings\n");
+  process.stdout.write(`${pc.gray("-".repeat(40))}\n`);
+
+  let findCurrent = false;
+
+  sessionData.forEach((weekend, index) => {
+    if (!findCurrent && new Date(weekend.sessions[0]!.start).getTime() >= now.getTime()) {
+      findCurrent = true;
+      process.stdout.write(pc.green(`${index + 1} ${TRACK_NAMES[weekend.location]}\n`));
+    } else if (findCurrent) {
+      process.stdout.write(pc.magenta(`${index + 1} ${TRACK_NAMES[weekend.location]}\n`));
+    } else {
+      process.stdout.write(pc.red(`${index + 1} ${TRACK_NAMES[weekend.location]}\n`));
+    }
+  });
 }

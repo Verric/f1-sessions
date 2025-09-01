@@ -46,12 +46,12 @@ export function getCountDown(nextSessionTime: string, now: Date): CountDownData 
 /**
  * Didn't know what to call this function,
  * Just returns the start and end session but handles RACE sessions as well.
- * Currently the F1 RACE sessions do not have an end time, so we arbitrarily set a 2 hour window
+ * Currently the scraped F1 RACE sessions do not have an end time, so we arbitrarily set a 1.5 hour window
  */
 function sessionBounds(s: F1Session): [number, number] {
-  const TWO_HOURS = 2 * 60 * 60 * 1000;
+  const NINETY_MINUTES = 90 * 60 * 1000;
   const start = new Date(s.start).getTime();
-  const end = s.name === "Race" ? start + TWO_HOURS : new Date(s.end).getTime();
+  const end = s.name === "Race" ? start + NINETY_MINUTES : new Date(s.end).getTime();
   return [start, end];
 }
 
