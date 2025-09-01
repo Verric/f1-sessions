@@ -11,7 +11,7 @@ interface DriverResult {
   points: number;
 }
 
-interface RaceResult {
+export interface RaceResult {
   location: Location;
   results: DriverResult[];
 }

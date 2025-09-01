@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { RaceResults, Schedule } from "./types.js";
+import type { RaceResult, RaceResults, Schedule } from "./types.js";
 
 const SESSION_DATA_FILE = "schedule.json";
 const RACE_DATA_FILE = "race.json";
@@ -21,6 +21,19 @@ export function readRaceDataOrThrow() {
 
 export function save(data: Schedule) {
   writeFileSync(SESSION_DATA, JSON.stringify(data), {
+    encoding: "utf-8",
+    flag: "a",
+  });
+}
+
+export function saveRaces(data: RaceResults) {
+  writeFileSync(RACE_DATA, JSON.stringify(data), {
+    encoding: "utf-8",
+  });
+}
+
+export function appendRace(data: RaceResult) {
+  writeFileSync(RACE_DATA, JSON.stringify(data), {
     encoding: "utf-8",
     flag: "a",
   });

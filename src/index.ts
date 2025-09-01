@@ -1,7 +1,7 @@
 import mri from "mri";
 import { getConstructorLeaderboard, getDriversLeaderboard } from "./championshipDataHelper.js";
-
-import { readRaceDataOrThrow, readSessionDataOrThrow } from "./dataFilefs.js";
+import { BASE_URL_RACE, raceURIs } from "./constants.js";
+import { readRaceDataOrThrow, readSessionDataOrThrow, saveRaces } from "./dataFilefs.js";
 import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./dataHelpers.js";
 import {
   showBanner,
@@ -14,8 +14,10 @@ import {
   showRaceResults,
   showWeekend,
 } from "./presenters.js";
+import { scrapeRaces } from "./scrapers/raceScraper.js";
+import type { RaceResults } from "./types.js";
 
-function main() {
+async function main() {
   const args = mri(process.argv.slice(2), { alias: { h: "help" } });
   if (args.h) {
     showHelp();
@@ -70,6 +72,20 @@ function main() {
       return;
     }
     showRaceResults(raceData, raceIndex - 1);
+  }
+
+  if (args.u) {
+    //const races: RaceResults = [];
+    const racePromises = raceURIs.map(async (race) => {
+      const foo = race.split("/");
+      const location = foo[2] === "sprint-results" ? `${foo[1]} - sprint` : foo[1];
+      const data = await scrapeRaces(`${BASE_URL_RACE}${race}`);
+      return { location, results: data };
+    });
+
+    //@ts-expect-error silence TS about possibly undefined
+    const races: RaceResults = await Promise.all(racePromises);
+    saveRaces(races);
   }
 }
 

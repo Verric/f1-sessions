@@ -84,19 +84,19 @@ export function showConstrutorLeaderboard(data: TeamStanding[]) {
   process.stdout.write("\n");
   process.stdout.write(`${pc.greenBright("Constructor's Championship")}\n`);
   process.stdout.write(`${pc.gray("Constructor".padEnd(20) + "Points".padEnd(20))}\n`);
-  process.stdout.write(`${pc.gray("-".repeat(60))}\n`);
+  process.stdout.write(`${pc.gray("-".repeat(40))}\n`);
   for (const { team, colour, points } of data) {
-    console.log(colourText(colour, team.padEnd(20)) + points.toString().padEnd(20));
+    process.stdout.write(`${colourText(colour, team.padEnd(20))}${points.toString().padEnd(20)}\n`);
   }
 }
 
 export function showDriversLeaderboard(data: Map<string, { points: number; colour: string }>) {
-  console.log();
-  console.log(pc.greenBright(`Drivers's Championship`));
-  console.log(pc.gray("Driver".padEnd(20) + "Points".padEnd(20)));
-  console.log(pc.gray("-".repeat(40)));
+  process.stdout.write("\n");
+  process.stdout.write(`${pc.greenBright(`Drivers's Championship`)}\n`);
+  process.stdout.write(`${pc.gray("Driver".padEnd(20) + "Points".padEnd(20))}\n`);
+  process.stdout.write(`${pc.gray("-".repeat(40))}\n`);
   for (const [driver, { points, colour }] of data.entries()) {
-    console.log(colourText(colour, driver.padEnd(20)) + points.toString().padEnd(20));
+    process.stdout.write(`${colourText(colour, driver.padEnd(20))}${points.toString().padEnd(20)}\n`);
   }
 }
 
