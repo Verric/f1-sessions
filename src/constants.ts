@@ -13,14 +13,15 @@ export const raceURIs = [
   "1262/spain/race-result",
   "1263/canada/race-result",
   "1264/austria/race-result",
-  "1277/great-britain/race-result", //dunno why it jumps to 1277 for this URI
+  "1277/great-britain/race-result", //dunno why it jumps to 1277 for this URL
   "1265/belgium/race-result",
   "1266/hungary/race-result",
+  "1267/netherlands/race-result",
 ] as const;
 
 /**
  * Array ordering must match the order of the events
- * Strings must match F1's website URL hence why "great-britain" is hypphonated but "emiliaromagna" is not
+ * Strings must match F1's website URL hence why "great-britain" is hyphonated but "emiliaromagna" is not
  */
 export const locationURIs = [
   "australia",

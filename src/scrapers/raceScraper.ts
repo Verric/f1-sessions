@@ -35,7 +35,7 @@ export async function scrapeRaces(url: string) {
   return results;
 }
 
-// site is mobile first, so if we just ask for the span it returns, NOR instead of the full anme
+// site is mobile first, so if we just ask for the span it returns, 3 letter abbr instead of the full anme
 function extractDriverName($cell: Cheerio<Element>) {
   const firstName = $cell.find("span .max-lg\\:hidden").first().text().trim();
   const lastName = $cell.find("span .max-md\\:hidden").first().text().trim();

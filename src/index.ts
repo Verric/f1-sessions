@@ -65,8 +65,9 @@ function main() {
     showDriversLeaderboard(results);
   }
 
+  //if users doesn't specify any race eg. "f1-sessions -r" return the latest race results
   if (args.r) {
-    const raceIndex = Number(args.r);
+    const raceIndex = args.r === true ? raceData.length : Number(args.r);
     if (raceIndex < 1 || raceIndex > raceData.length) {
       process.stdout.write(`Please enter a race a number between 1-${raceData.length}\n`);
       return;
