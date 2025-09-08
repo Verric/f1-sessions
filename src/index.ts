@@ -1,5 +1,6 @@
+#!/usr/bin/env node
 import mri from "mri";
-import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./dataProcessors.js";
+import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./processors.js";
 import {
   handleConstructorChampionship,
   handleDriversChampionship,

@@ -1,9 +1,11 @@
 {
-  "name": "f1-tui",
+  "name": "f1-sessions",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
+  "description": "Utility tool for F1 around sessions and race results for 2025",
   "type": "module",
+  "bin": {
+    "f1-sessions": "dist/index.js"
+  },
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json; cp -r data/ dist/data",
     "check": "tsc --noEmit",

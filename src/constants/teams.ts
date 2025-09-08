@@ -10,7 +10,9 @@ export type TEAM_NAMES =
   | "Kick Sauber"
   | "Haas";
 
-//Bit Fragile, but these names must match team names in race.json
+//Bit Fragile, but these names must match team names in race.json which in turn is scraped from the F1 site
+// hexcodes are based on a reddit post "https://www.reddit.com/r/formula1/comments/1ixh2fp/f1_2025_hex_codes/"
+// thanks to /u/BrazilF1 for these
 export const TEAM_COLOURS = {
   Mercedes: "#00D7B6",
   "Red Bull Racing": "#4781D7",

@@ -5,7 +5,7 @@ import {
   getCurrentWeekend,
   getFollowingWeekend,
   getNextSession,
-} from "../src/dataProcessors.js";
+} from "../src/processors.js";
 import {
   currentSessionTestFixture,
   emptyScheduleFixture,

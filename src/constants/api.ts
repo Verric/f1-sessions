@@ -1,6 +1,5 @@
 export const BASE_URL = "https://www.formula1.com/en/racing/2025/" as const;
 export const BASE_URL_RACE = "https://www.formula1.com/en/results/2025/races/" as const;
-//export const BASE_URL_SPRINT = "https://www.formula1.com/en/results/2025/races/1255/china/sprint-results"
 
 /**
  * Array ordering must match the order of the events

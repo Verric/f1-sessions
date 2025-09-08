@@ -4,7 +4,7 @@ import {
   getCurrentWeekend,
   getDriversLeaderboard,
   getFollowingWeekend,
-} from "./dataProcessors.js";
+} from "./processors.js";
 import {
   showConstrutorLeaderboard,
   showDriversLeaderboard,

@@ -2,7 +2,7 @@ import pc from "picocolors";
 import { HOST_TZ } from "./constants/general.js";
 import { TIME_ZONES, TRACK_NAMES } from "./constants/locations.js";
 import { colourText, TEAM_COLOURS } from "./constants/teams.js";
-import { getCountDown } from "./dataProcessors.js";
+import { getCountDown } from "./processors.js";
 import type { CountDownData, F1Session, RaceResults, Schedule, TeamStanding, Weekend } from "./types.js";
 import { formatTimeTz } from "./utils/time.js";
 
@@ -79,7 +79,15 @@ export function showRaceResults(raceData: RaceResults, index: number) {
 
 export function showHelp() {
   console.log("Usage: node f1-sessions <options>");
-  console.log("-s  Displays all sessions for the current or following race weekend");
+  console.log(
+    "-c [raceNumber] - Displays construcutors leaderboard as of [raceNumber] or the latest results if not specified",
+  );
+  console.log(
+    "-d [raceNumber] - Displays drivers leaderboard as of [raceNumber] or the latest results if not specified",
+  );
+  console.log("-l - Lists race weekends and their race numbers");
+  console.log("-r [raceNumber] - Displays race results of a given race or the latest race if not specified");
+  console.log("-s - Displays all sessions for the current or following race weekend");
 }
 
 export function showConstrutorLeaderboard(data: TeamStanding[]) {
