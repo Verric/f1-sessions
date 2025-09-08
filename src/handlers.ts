@@ -49,20 +49,6 @@ export function handleRaceResults(raceData: RaceResults, raceIndex?: number | bo
   showRaceResults(raceData, raceNumber - 1);
 }
 
-export async function handleUpdateRaces() {
-  //const races: RaceResults = [];
-  const racePromises = raceURIs.map(async (race) => {
-    const foo = race.split("/");
-    const location = foo[2] === "sprint-results" ? `${foo[1]} - sprint` : foo[1];
-    const data = await scrapeRaces(`${BASE_URL_RACE}${race}`);
-    return { location, results: data };
-  });
-
-  //@ts-expect-error silence TS about possibly undefined
-  const races: RaceResults = await Promise.all(racePromises);
-  saveRaces(races);
-}
-
 // SESSION HANDLERS
 export function handleScheduleWeekend(sessionData: Schedule, now: Date) {
   const weekend = getCurrentWeekend(sessionData, now) || getFollowingWeekend(sessionData, now);
@@ -72,4 +58,25 @@ export function handleScheduleWeekend(sessionData: Schedule, now: Date) {
 // MISC HANDLERS
 export function handleRaceListings(sessionData: Schedule, now: Date) {
   showRaceListings(sessionData, now);
+}
+
+//This function seems hacked, brain is just flat-lining here,
+//i know it looks like im breaking DRY but this is a hack and I don't want to pull
+// other things into here, will have to revist later
+export async function handleUpdateRaces(sessions: Schedule, now: Date) {
+  const NINETY_MINUTES = 90 * 60 * 1000;
+  const newSessions = sessions
+    .flatMap((w) => w.sessions)
+    .filter((s) => s.name === "Race" || s.name === "Sprint")
+    .filter((s) => new Date(s.start).getTime() + NINETY_MINUTES <= now.getTime());
+  const racePromises = raceURIs.slice(0, newSessions.length).map(async (race) => {
+    const foo = race.split("/");
+    const location = foo[2] === "sprint-results" ? `${foo[1]} - sprint` : foo[1];
+    const data = await scrapeRaces(`${BASE_URL_RACE}${race}`);
+    return { location, results: data };
+  });
+
+  //@ts-expect-error silence TS about possibly undefined
+  const races: RaceResults = await Promise.all(racePromises);
+  saveRaces(races);
 }

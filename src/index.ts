@@ -23,9 +23,9 @@ async function main() {
 
   const sessionData = readSessionDataOrThrow();
   const raceData = readRaceDataOrThrow();
+  const currentSession = getCurrentSession(sessionData, now);
   const session = getNextSession(sessionData, now);
   const weekend = getCurrentWeekend(sessionData, now) || getFollowingWeekend(sessionData, now);
-  const currentSession = getCurrentSession(sessionData, now);
 
   showBanner();
   showCurrentSession(currentSession);
@@ -53,7 +53,9 @@ async function main() {
   }
 
   if (args.u) {
-    await handleUpdateRaces();
+    process.stdout.write("Updating race results. This will scrape the F1 website\n");
+    await handleUpdateRaces(sessionData, now);
+    process.stdout.write("Race results updated\n");
   }
 }
 
