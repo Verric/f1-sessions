@@ -90,7 +90,7 @@ Shows the results of race number 5.
 
 ### `-u`
 
-Update your local `race.json` file currently it will scrape from the start of the season to the current date. In the future this will make incremental updates to the file so we don't have scrape the F1 results page in bulk
+Update your local `race.json` file. Currently it will scrape from the start of the season to the current date. In the future this will make incremental updates to the file so we don't have scrape the F1 results page in bulk
 
 **Example:**
 
