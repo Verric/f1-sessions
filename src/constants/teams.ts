@@ -16,9 +16,9 @@ export type TEAM_NAMES =
 export const TEAM_COLOURS = {
   Mercedes: "#00D7B6",
   "Red Bull Racing": "#4781D7",
-  Ferrari: "#ED1131	",
-  McLaren: "#F47600	",
-  Alpine: "#00A1E8	",
+  Ferrari: "#ED1131",
+  McLaren: "#F47600",
+  Alpine: "#00A1E8",
   "Racing Bulls": "#6C98FF",
   "Aston Martin": "#229971",
   Williams: "#1868DB	",

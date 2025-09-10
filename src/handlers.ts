@@ -1,17 +1,17 @@
 import { BASE_URL_RACE, raceURIs } from "./constants/api.js";
 import {
-  getConstructorLeaderboard,
-  getCurrentWeekend,
-  getDriversLeaderboard,
-  getFollowingWeekend,
-} from "./processors.js";
-import {
   showConstrutorLeaderboard,
   showDriversLeaderboard,
   showRaceListings,
   showRaceResults,
   showWeekend,
 } from "./presenters.js";
+import {
+  getConstructorLeaderboard,
+  getCurrentWeekend,
+  getDriversLeaderboard,
+  getFollowingWeekend,
+} from "./processors.js";
 import { scrapeRaces } from "./scrapers/races.js";
 import type { RaceResults, Schedule } from "./types.js";
 import { saveRaces } from "./utils/filesystem.js";

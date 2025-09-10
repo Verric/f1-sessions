@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import mri from "mri";
-import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./processors.js";
 import {
   handleConstructorChampionship,
   handleDriversChampionship,
@@ -10,6 +9,7 @@ import {
   handleUpdateRaces,
 } from "./handlers.js";
 import { showBanner, showCountDown, showCurrentSession, showHelp } from "./presenters.js";
+import { getCurrentSession, getCurrentWeekend, getFollowingWeekend, getNextSession } from "./processors.js";
 import { readRaceDataOrThrow, readSessionDataOrThrow } from "./utils/filesystem.js";
 
 async function main() {

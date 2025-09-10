@@ -137,7 +137,7 @@ f1-sessions -u
 To remove the global link later:
 
 ```bash
-npm unlink -g f1-tui
+npm unlink -g f1-sessions
 ```
 
 ---
